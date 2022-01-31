@@ -15,7 +15,7 @@ on the movements of the mpu gyro.
 
 See https://youtu.be/XhT9lw_JC04 for a demonstration of its functionality.
 
-![Connect VCC,GND,SDA,SCL and INT to pin 2](gyro-control/gyro-visualization-test/mpu6050_connected_to_arduino.jpg)
+![Connect VCC,GND,SDA,SCL and INT to pin 2](mpu6050_connected_to_arduino.jpg)
 
 Done in January 2022 as part of a student project to control Nico hand by home-made VR glove.
 It is just a dirty small example.
