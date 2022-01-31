@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Gyro visualization</title>
+	</head>
+	<body>
+		<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+		</script>
+		<model-viewer id="plane" bounds="tight" alt="gyro representation" src="plane.glb" disable-zoom shadow-intensity="1" style="width:1400px; height:800px"></model-viewer>
+
+	<script>
+		var viewer=document.getElementById("plane");
+		viewer.scale = "0.1 0.1 0.1";
+		var inter = setInterval(getposition, 100);
+    		var xmlHttp = null;
+		function position(evt)
+                {
+			console.log(xmlHttp.responseText);
+			viewer.orientation = xmlHttp.responseText;
+			viewer.updateFraming();
+                }
+		function getposition()
+		{
+    			xmlHttp = new XMLHttpRequest();
+			xmlHttp.addEventListener("load", position);
+    			xmlHttp.open( "GET", "xyz", false );
+    			xmlHttp.send( null );
+  		}
+	</script>
+	</body>
+</html>

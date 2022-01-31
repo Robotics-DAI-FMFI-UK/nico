@@ -1,2 +1,2 @@
 # nico
-Our experiments with humanoid robot Nico
+Our experiments with Nico humanoid robot
