@@ -13,7 +13,7 @@ dynamic model using Google's library and emits ajax requests to that server to
 retrieve the YPR values 10 times per second, and then rotates the model based
 on the movements of the mpu gyro. 
 
-See https://youtu.be/XhT9lw_JC04 for a demonstration of its functionality.
+<iframe width="1280" height="720" src="https://www.youtube.com/embed/XhT9lw_JC04" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ![Connect VCC,GND,SDA,SCL and INT to pin 2](mpu6050_connected_to_arduino.jpg)
 
