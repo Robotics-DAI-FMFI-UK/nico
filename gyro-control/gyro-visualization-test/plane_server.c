@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <time.h> 
 #include <pthread.h>
+#include <signal.h>
 
 #include "gyro_control.h"
  
@@ -25,7 +26,7 @@ int tcounter = 0;
 char ip_addr[INET_ADDRSTRLEN + 1];
 pthread_mutex_t log_lock;
 
-static volatile double x = 0, y = 0, z = 0;
+static volatile double roll = 0, pitch = 0, yaw = 0;
  
 void logmsg(const char *s)
 {
@@ -105,9 +106,9 @@ void *handle_client(void *args)
 	int filede = -1;
 	if (recvbuf[5] == 'x')
 	{
-          get_gyro_orientation(&x, &y, &z);
+          get_gyro_orientation(&roll, &pitch, &yaw);
 	  char orientation[40];
-	  sprintf(orientation, "%ddeg %ddeg %ddeg", (int)(x + 0.5), (int)(y + 0.5), (int)(z + 0.5));
+	  sprintf(orientation, "%ddeg %ddeg %ddeg", (int)(roll + 0.5), (int)(pitch + 0.5), (int)(yaw + 0.5));
           sprintf(recvbuf, "HTTP/1.1 200 OK\r\nServer: gyro-server\r\nContent-Type: text/plain\r\nContent-Length: %ld\r\n\r\n%s", strlen(orientation), orientation);
 	}
 	else
@@ -147,12 +148,31 @@ void *handle_client(void *args)
     close(fd);
     return 0;
 }
+
+void sigterm_handler(int i)
+{
+	return;
+}
  
+void setup_sigterm_handler()
+{
+    struct sigaction act;
+    act.sa_handler = sigterm_handler;
+    sigemptyset (&act.sa_mask);
+    act.sa_flags = 0;
+    if (sigaction(SIGTERM, &act, 0))
+    {
+        perror("sigaction");
+	exit(1);
+    }
+}
+
 int main(int argc, char *argv[])
 {
-    int listenfd = 0;
     struct sockaddr_in serv_addr; 
     char buf[200];
+
+    setup_sigterm_handler();
  
     if (!init_gyro_input())
     {
@@ -164,7 +184,7 @@ int main(int argc, char *argv[])
     
     pthread_mutex_init(&log_lock, 0);
     
-    listenfd = socket(AF_INET, SOCK_STREAM, 0);
+    int listenfd = socket(AF_INET, SOCK_STREAM, 0);
     if (listenfd == -1)
     {
         sprintf(buf, "error socket(): %d\n", errno);

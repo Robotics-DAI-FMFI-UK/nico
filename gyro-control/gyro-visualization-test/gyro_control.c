@@ -10,6 +10,7 @@
 #include <sys/ioctl.h>
 #include <getopt.h>
 #include <pthread.h>
+#include <signal.h>
 
 static int serialport_init(const char* serialport, int baud);
 static int serialport_write(int fd, const char* str);
@@ -45,7 +46,7 @@ void *console_thread(void *args)
     while (!terminated)
     {
       if (fgets(buf, 22, stdin) == 0) break;
-      printf("use said: %s", buf);
+      printf("you said: %s", buf);
       if (strncmp(buf, "exit", 4) == 0)
         terminated = 1;
       if (strncmp(buf, "test", 4) == 0)
@@ -54,6 +55,8 @@ void *console_thread(void *args)
         testing = 0;
     }
     terminated = 1;
+    kill(getpid(), SIGTERM);  // this signal should be caught so that accept() would be interrupted
+
     return 0;
 }    
 
@@ -68,18 +71,18 @@ void *main_loop(void *arg)
          //printf("read %d bytes: %s", n, buf);            
          sscanf(buf, "%lf%lf%lf", &a[0], &a[1], &a[2]);
          pthread_mutex_lock(&ypr_lock);
-         last_roll = -a[0];
-         last_yaw = -a[1];
+         last_yaw = -a[0];
+         last_roll = -a[1];
          last_pitch = -a[2];
          pthread_mutex_unlock(&ypr_lock);
          if (testing)
-             printf("%.2f %.2f %.2f\n", last_yaw, last_pitch, last_roll);
+             printf("%.2f %.2f %.2f\n", last_roll, last_pitch, last_yaw);
      }
      close(arduino_fd);
      return 0;
 }
 
-void get_gyro_orientation(double *yaw, double *pitch, double *roll)
+void get_gyro_orientation(volatile double *roll, volatile double *pitch, volatile double *yaw)
 {
     pthread_mutex_lock(&ypr_lock);
       *yaw = last_yaw;

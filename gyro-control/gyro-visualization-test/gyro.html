@@ -16,6 +16,7 @@
 		function position(evt)
                 {
 			console.log(xmlHttp.responseText);
+			// roll pitch yaw (0deg 0deg 0deg)
 			viewer.orientation = xmlHttp.responseText;
 			viewer.updateFraming();
                 }

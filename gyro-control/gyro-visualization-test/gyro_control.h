@@ -2,8 +2,8 @@
 #define __GYRO_CONTROL_H__
 
 int init_gyro_input();
-void get_gyro_orientation(volatile double *x, volatile double *y, volatile double *z);
+void get_gyro_orientation(volatile double *roll, volatile double *pitch, volatile double *yaw);
 
-extern int terminated;
+extern volatile int terminated;
 
 #endif
