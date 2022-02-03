@@ -2,6 +2,20 @@
 
 4-wire bi-directional timer-less fast background communication for two Arduinos with buffer based on pin-change interrupt only
 
+Motivation and explanation:
+
+HW communication capabilities of Arduino (UART, I2C, SPI...) are limited and often the pins are used for other purpose.
+SW simulation libraries such as SoftwareSerial are very fragile when using with other hardware - such as Gyro, servomotors, etc.
+This program implements a bi-directional very fast communication using 4 cables between two Arduinos only using pin change interrupt.
+That means, the timing is not an issue - if the system is busy serving gyro, or motor, or anything else, this communication 
+can wait as much as needed for the pin change interrupt to finally occur, and continue from that point. For that end it requires
+8 stages to transmit a single bit. This however allows fully asynchronous timer-less communication where all transmissions are
+acknowledges by the communicating peer. This software is a public domain, use it for whatever you find useful.
+As of Feb 2022, it's just been finished and not tested heavily. More thinking needs to be done into resolving conflicts
+when both sides start communicating. I think it is already taken care of sufficiently, but I am not 100% sure. And also
+the initialization might need some improvements, currently, the init needs to be called twice as we are getting some spurious
+pin change interrupts when the bootloader starts the program or something of that sort. But double-init solves the issue fine.
+
 
 signals: 
 
