@@ -25,7 +25,7 @@ static uint8_t sendbuf[SENDBUF_SIZE];
 static uint8_t sendbuf_readptr;
 static uint8_t sendbuf_writeptr;
 static uint8_t sending_byte;
-uint8_t sending_bit_number;
+static uint8_t sending_bit_number;
 
 static uint8_t recvbuf[RECVBUF_SIZE];
 static uint8_t recvbuf_readptr;
