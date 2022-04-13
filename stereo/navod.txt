@@ -1,0 +1,22 @@
+Ukazka nacitavania obrazu z dvoch kamier See3CAM CU135 pomocou kniznice Video 4 Linux (v4l2)
+
+pouzitie:
+
+  ./zapis_obrazky    - po kazdom stlaceni ENTER zapise dvojicu obrazkov do PNG suboru
+
+kompilacia:
+
+  make
+
+
+potrebne mat nainstalovane balicky:
+
+  libv4l-dev
+  v4l-utils  
+  libpng12-dev
+
+
+kontakt:
+
+  Palo, pavel.petrovic@gmail.com
+
