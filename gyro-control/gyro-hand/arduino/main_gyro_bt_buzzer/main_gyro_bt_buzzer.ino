@@ -46,7 +46,7 @@
 // AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)
 // AD0 high = 0x69
 MPU6050 mpu;
-int16_t y3, p3, r3, d2, y1, r1;
+int16_t y3, p3, r3, d2, y1, p1, r1;
 
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
@@ -169,8 +169,8 @@ void mpu_loop() {
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
-    y1 = (int)(0.5 + ypr[0] * 180 / M_PI);
-    //p1 = (int)(0.5 + ypr[1] * 180 / M_PI);
+    //y1 = (int)(0.5 + ypr[0] * 180 / M_PI);
+    p1 = (int)(0.5 + ypr[1] * 180 / M_PI);
     r1 = (int)(0.5 + ypr[2] * 180 / M_PI);
 #endif
 
@@ -206,6 +206,26 @@ void setup()
   tone(BUZZER, 880, 40);
   delay(100);
   tone(BUZZER, 1760, 100);
+  delay(100);
+  for (int i = 0; i < 50; i++)
+  {
+    serial_print("@");
+    delay(100);
+    mpu_loop();
+  }
+  serial_print("*");
+  
+  tone(BUZZER, 1760, 100);
+  delay(100);
+  mpu_loop();
+  tone(BUZZER, 1760, 100);
+  delay(100);
+  mpu_loop();
+  tone(BUZZER, 880, 40);
+  delay(100);
+  mpu_loop();
+  tone(BUZZER, 880, 40);
+  delay(100);
 }
 
 void loop()
@@ -245,6 +265,7 @@ void arrived_byte_from_a2(uint8_t c)
 
 void new_ypr32_arrived()
 {
+  long chk = y3 + p3 + r3 + d2 + p1 + r1;
   serial_print(y3);
   serial_write(' ');
   serial_print(p3);
@@ -253,9 +274,29 @@ void new_ypr32_arrived()
   serial_write(' ');
   serial_print(d2);
   serial_write(' ');
-  serial_print(y1);
+  //serial_print(y1);
+  serial_print(p1);
   serial_write(' ');
-  serial_println(r1);
+  serial_print(r1);  
+  //serial_print(p1);
+  serial_write(' ');
+  int ana = analogRead(0) - 271;
+  chk += ana;
+  serial_print(ana);
+  serial_write(' ');
+  ana = analogRead(1) - 271;
+  chk += ana;
+  serial_print(ana);
+  serial_write(' ');
+  ana = analogRead(2) - 537;
+  chk += ana;
+  serial_print(ana);
+  serial_write(' ');
+  ana = analogRead(3) - 271;
+  chk += ana;
+  serial_print(ana);
+  serial_write(' ');
+  serial_println(chk % 256); 
 }
 
 
@@ -274,13 +315,15 @@ void serial_print(int x)
 {
   long n = 1;
   if (x < 0) { serial_write('-'); x *= -1; }
-  while (n <= x) n *= 10;
-  if (n > 1) n /= 10;    
+  while (n <= x) n *= 16;
+  if (n > 1) n /= 16;    
   do
   {
-    serial_write('0' + (x / n));
+    uint8_t d = x / n;
+    if (d < 10) serial_write('0' + d);
+    else serial_write('A' + d - 10);
     x %= n;
-    n /= 10;    
+    n /= 16;    
   } while (n); 
 }
 
