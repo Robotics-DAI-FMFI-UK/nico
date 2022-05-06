@@ -50,7 +50,7 @@
 
 MPU6050 mpu;
 
-int16_t y3, p3, r3, p2;
+int16_t y3, p3, r3, y2;  // p2;
 
 #define OUTPUT_READABLE_YAWPITCHROLL
 
@@ -173,9 +173,11 @@ void mpu_loop() {
     //Serial.print("ypr\t");
 
     //int y2 = (int)(0.5 + ypr[0] * 180 / M_PI);
-    p2 = (int)(0.5 + ypr[1] * 180 / M_PI);
+    //p2 = (int)(0.5 + ypr[1] * 180 / M_PI);
     //int r2 = (int)(0.5 + ypr[2] * 180 / M_PI);
 
+    y2 = (int)(0.5 + ypr[0] * 180 / M_PI);
+    
     
 #endif
 
@@ -247,7 +249,8 @@ void new_ypr3_arrived()
   Serial.print("y:"); Serial.print(y3);
   Serial.print(",p:"); Serial.print(p3);
   Serial.print(",r:"); Serial.print(r3);
-  Serial.print(",d:"); Serial.println(p2-p3);
+  //Serial.print(",d:"); Serial.println(p2-p3);
+  Serial.print(",d:"); Serial.println(y2-y3);
     
     uint8_t header = '@';
     send_byte_4wcommB(header);
@@ -255,7 +258,8 @@ void new_ypr3_arrived()
     for (uint8_t i = 0 ; i < 6; i++)
     send_byte_4wcommB(ypr16[i]);
     
-    int16_t to_send = p2-p3;
+    //int16_t to_send = p2-p3;
+    int16_t to_send = y2-y3;
     send_byte_4wcommB(*((uint8_t *)&to_send));
     send_byte_4wcommB(*(((uint8_t *)&to_send) + 1));    
 }
