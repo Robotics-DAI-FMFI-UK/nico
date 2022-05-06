@@ -10,7 +10,7 @@ and passive buzzer and 4 bend sensors on analogue pins.
 
 On the PC side, Nico is controlled directly using Dynamixel SDK from C.
 
-<iframe width="1280" height="720" src="https://www.youtube.com/embed/7e5xwhA107s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+https://www.youtube.com/embed/7e5xwhA107s
 
 Done in 2021/2022 as part of a student project of Elisabet Delgado Mas to control Nico hand by home-made VR glove.
 
