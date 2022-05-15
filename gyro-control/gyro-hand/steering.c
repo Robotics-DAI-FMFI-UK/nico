@@ -2,7 +2,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <stdlib.h>
-
+#include <string.h>
 #include "gyro_control.h"
 #include "nico_motors.h"
 
@@ -33,11 +33,11 @@ int limb_index_to_motor_index[] = {	r_shoulder_fwd_bwd,
 	                                r_thumb_lift, 
 	                                r_thumb_close };
 #endif	                                
-	                                
-	
-int limb_max[] = { 90,60,30,50,80,28,300,300,300,150 }; //bent
+	                  
+
+int limb_max[] = { 90,60,30,50,80,28,300,230,300,60 }; //bent
 int limb_min[] = { -90,-60,0,0,-80,-28,0,0,0,0 };
-	
+//filePointer = fopen("log.txt", "a+") ;	
 void move_all_limbs(hand_data *old_hand, hand_data *new_hand)
 {	
 	for (int i = 0; i < HAND_DATA_COUNT; i++)
@@ -47,7 +47,12 @@ void move_all_limbs(hand_data *old_hand, hand_data *new_hand)
 	    //if (i != 5) continue;	
 	    //printf("%d\n", new_hand->data[i]);
 		int16_t limb_diff = abs(old_hand->data[i] - new_hand->data[i]);
-		if ((limb_diff > 3) && (limb_diff < 60))
+		if (limb_diff >= 60)
+		{
+			new_hand->data[i] = old_hand->data[i] + (new_hand->data[i] - old_hand->data[i]) / 3;
+		}		
+		
+		if (limb_diff > 3) //&& (limb_diff < 60))
 	    {
 		    old_hand->data[i] = new_hand->data[i];
 		    
@@ -57,8 +62,8 @@ void move_all_limbs(hand_data *old_hand, hand_data *new_hand)
 					    
 		    double motor_value = 1.0 - mag / (double)(limb_max[i] - limb_min[i]);
 		    		    
-			printf("%d: %d -> %d -> %.2lf\n", i, new_hand->data[i], mag, motor_value);
-				  
+			//printf("%d: %d -> %d -> %.2lf\n", i, new_hand->data[i], mag, motor_value);
+			
 		    nico_move_to_position(limb_index_to_motor_index[i], motor_value);
 		}
 	}

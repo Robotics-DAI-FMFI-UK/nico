@@ -25,6 +25,18 @@
 #define head_lift 21
 
 
+void recording_start(char *fileName);
+
+void recording_stop();
+
+void replay_recording(char *filename); 
+
+void nico_grip(int grip_number);
+
+void nico_finish_grip();
+
+void nico_show();
+
 // position is 0-1 for the available range for that particular motor
 void nico_move_to_position(int which_motor, double position);
 
