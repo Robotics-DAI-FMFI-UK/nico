@@ -60,7 +60,7 @@ void *main_loop(void *arg)
 	     if (((a[0] + a[1] + a[2] + a[3] + a[4] + a[5] + b[0] + b[1] + b[2] + b[3]) % 256) != chksm)
 	     {
 		     static int mismatch_count = 0;
-		     printf("chksm mismatch %d\n", mismatch_count++);
+		     printf("\t\t\t\t\t\t\t\tchksm mismatch %d\r", mismatch_count++);
                  //printf(": %hd %hd %hd %hd %hd %hd %hd %hd %hd %hd:  %hd vs %hd\n", a[0], a[1], a[2], a[3], a[4], a[5], b[0], b[1], b[2], b[3], chksm,
 	         //			 ((a[0] + a[1] + a[2] + a[3] + a[4] + a[5] + b[0] + b[1] + b[2] + b[3]) % 256));
 
@@ -68,11 +68,18 @@ void *main_loop(void *arg)
 	      }
 
 		 pthread_mutex_lock(&arrive_data_lock);
-		 last_data.data[hand_yaw] = (int16_t)(0.5 + last_data.data[hand_yaw] * (1.0 - alpha) + alpha * (-a[0]));
-		 last_data.data[hand_roll] = (int16_t)(0.5 + last_data.data[hand_roll] * (1.0 - alpha) + alpha * (-a[1]));
+		 last_data.data[hand_yaw] = (int16_t)(0.5 + last_data.data[hand_yaw] * (1.0 - alpha) + alpha * (a[0]));
+		 last_data.data[hand_roll] = (int16_t)(0.5 + last_data.data[hand_roll] * (1.0 - alpha) + alpha * (a[1]));
 		 last_data.data[hand_pitch] = (int16_t)(0.5 + last_data.data[hand_pitch] * (1.0 - alpha) + alpha * (a[2]));
-		 last_data.data[hand_elbow] = (int16_t)(0.5 + last_data.data[hand_elbow] * (1.0 - alpha) + alpha * (-a[3]));
-		 last_data.data[hand_wrist_rot] = (int16_t)(0.5 + last_data.data[hand_wrist_rot] * (1.0 - alpha) + alpha * a[5]);
+		 last_data.data[hand_elbow] = (int16_t)(0.5 + last_data.data[hand_elbow] * (1.0 - alpha) + alpha * (a[3]));
+		 last_data.data[hand_wrist_rot] = (int16_t)(0.5 + last_data.data[hand_wrist_rot] * (1.0 - alpha) + alpha * (-a[5]));
+		 		 
+		 //last_data.data[hand_yaw] = (int16_t)(0.5 + last_data.data[hand_yaw] * (1.0 - alpha) + alpha * (-a[0]));
+		 //last_data.data[hand_roll] = (int16_t)(0.5 + last_data.data[hand_roll] * (1.0 - alpha) + alpha * (-a[1]));
+		 //last_data.data[hand_pitch] = (int16_t)(0.5 + last_data.data[hand_pitch] * (1.0 - alpha) + alpha * (a[2]));
+		 //last_data.data[hand_elbow] = (int16_t)(0.5 + last_data.data[hand_elbow] * (1.0 - alpha) + alpha * (-a[3]));
+		 //last_data.data[hand_wrist_rot] = (int16_t)(0.5 + last_data.data[hand_wrist_rot] * (1.0 - alpha) + alpha * a[5]);
+		 
 		 last_data.data[hand_wrist_bend] = (int16_t)(0.5 + last_data.data[hand_wrist_bend] * (1.0 - alpha) + alpha * (-a[4]));
 		 last_data.data[hand_index_fi] = b[0];
 		 last_data.data[hand_middle_fi] = b[1];
