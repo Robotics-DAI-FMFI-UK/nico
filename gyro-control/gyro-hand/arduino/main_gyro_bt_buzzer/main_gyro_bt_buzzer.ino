@@ -51,6 +51,7 @@ int16_t y3, p3, r3, d2, y1, p1, r1;
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
 #define OUTPUT_READABLE_YAWPITCHROLL
+//#define OUTPUT_READABLE_EULER
 
 #define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
@@ -173,6 +174,18 @@ void mpu_loop() {
     p1 = (int)(0.5 + ypr[1] * 180 / M_PI);
     r1 = (int)(0.5 + ypr[2] * 180 / M_PI);
 #endif
+
+
+#ifdef OUTPUT_READABLE_EULER
+    // display Euler angles in degrees
+    mpu.dmpGetQuaternion(&q, fifoBuffer);
+    mpu.dmpGetEuler(euler, &q);
+    
+    p1 = (int)(0.5 + euler[1] * 180 / M_PI);
+    r1 = (int)(0.5 + euler[2] * 180 / M_PI);
+#endif
+
+
 
     // blink LED to indicate activity
     blinkState = !blinkState;

@@ -56,6 +56,7 @@ MPU6050 mpu;
    ========================================================================= */
 
 #define OUTPUT_READABLE_YAWPITCHROLL
+//#define OUTPUT_READABLE_EULER
 
 #define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
@@ -195,6 +196,34 @@ void mpu_loop() {
     Serial.print((int)(0.5 + ypr[1] * 180 / M_PI));
     Serial.print(" ");
     Serial.println((int)(0.5 + ypr[2] * 180 / M_PI));
+#endif
+
+
+
+#ifdef OUTPUT_READABLE_EULER
+    // display Euler angles in degrees
+    mpu.dmpGetQuaternion(&q, fifoBuffer);
+    mpu.dmpGetEuler(euler, &q);
+    uint8_t header = '@';
+    send_byte_4wcomm(header);
+    
+    int to_send = (int)(0.5 + euler[0] * 180 / M_PI);
+    send_byte_4wcomm(*((uint8_t *)&to_send));
+    send_byte_4wcomm(*(((uint8_t *)&to_send) + 1));
+    to_send = (int)(0.5 + euler[1] * 180 / M_PI);
+    send_byte_4wcomm(*((uint8_t *)&to_send));
+    send_byte_4wcomm(*(((uint8_t *)&to_send) + 1));
+    to_send = (int)(0.5 + euler[2] * 180 / M_PI);
+    send_byte_4wcomm(*((uint8_t *)&to_send));
+    send_byte_4wcomm(*(((uint8_t *)&to_send) + 1));
+    
+    Serial.print("tr:");
+    Serial.print((int)(0.5 + euler[0] * 180 / M_PI));
+    Serial.print(" ");
+    Serial.print((int)(0.5 + euler[1] * 180 / M_PI));
+    Serial.print(" ");
+    Serial.println((int)(0.5 + euler[2] * 180 / M_PI));
+    
 #endif
 
     // blink LED to indicate activity
