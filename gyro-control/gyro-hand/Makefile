@@ -15,7 +15,7 @@ FORMAT      = -m64
 INCLUDES   = -I$(DIR_DXL)/include/dynamixel_sdk
 LIBRARIES  += -lrt -lpthread -ldxl_x64_c
 
-SOURCES = gyro_control.c web_frontend.c nico_motors.c steering.c console.c main.c
+SOURCES = gyro_control.c web_frontend.c nico_motors.c steering.c console.c main.c grip_positions.c
 OBJECTS  = $(addsuffix .o,$(addprefix $(DIR_OBJS)/,$(basename $(notdir $(SOURCES)))))
 
 $(TARGET): make_directory $(OBJECTS)
