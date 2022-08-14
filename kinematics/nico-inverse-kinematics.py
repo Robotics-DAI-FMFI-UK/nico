@@ -55,7 +55,8 @@ def on_press(event):
     elif event.key == 'Q':
         quit()
 
-my_chain = ikpy.chain.Chain.from_urdf_file("kinematics.urdf", base_elements=["torso:11"], active_links_mask=[False, True, True, True, True, True, True, True, True, True])
+base_el = ["torso:11", "r_shoulder_z", "right_shoulder:11", "r_shoulder_y", "right_collarbone:11", "r_arm_x", "right_upper_arm:11", "r_elbow_y", "right_lower_arm:11", "r_wrist_z", "right_wrist:11", "r_wrist_x", "right_palm:11", "r_indexfingers_x", "finger_segment:23", "r_indexfinger_1st_x", "finger_segment:13", "r_indexfinger_2nd_x", "fingertip:13" ]
+my_chain = ikpy.chain.Chain.from_urdf_file("kinematics.urdf", base_elements=base_el, active_links_mask=[False, True, True, True, True, True, True, True, True, True])
 print("chain:")
 print(my_chain)
 fig = matplotlib.pyplot.figure()

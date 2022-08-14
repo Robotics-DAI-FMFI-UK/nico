@@ -57,7 +57,8 @@ def on_press(event):
     elif event.key == 'Q':
         quit()
 
-my_chain = ikpy.chain.Chain.from_urdf_file("kinematics.urdf", base_elements=["torso:11"], active_links_mask=[False, True, True, True, True, True, True, True, True, True])
+base_el = ["torso:11", "r_shoulder_z", "right_shoulder:11", "r_shoulder_y", "right_collarbone:11", "r_arm_x", "right_upper_arm:11", "r_elbow_y", "right_lower_arm:11", "r_wrist_z", "right_wrist:11", "r_wrist_x", "right_palm:11", "r_indexfingers_x", "finger_segment:23", "r_indexfinger_1st_x", "finger_segment:13", "r_indexfinger_2nd_x", "fingertip:13" ] 
+my_chain = ikpy.chain.Chain.from_urdf_file("kinematics.urdf", base_elements=base_el, active_links_mask=[False, True, True, True, True, True, True, True, True, True])
 min_angles = [0, -1.308996939, -0.52359877559, -2.05948851735, -1.745, -1.396, 0, -1.309, -1.309, -1.309]
 max_angles = [0, 0.959931088597, 1.7453292519943295, 1.51843644924, 0, 1.396, 0.872665, 0, 0, 0]
 print("chain:")

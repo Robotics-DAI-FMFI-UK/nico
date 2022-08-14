@@ -172,10 +172,18 @@ void slowly_approach_current_position()
 		
 		if (i == 12) delta *= 2;
 		
-		if (current_motor_positions[i] > dxl_present_position) dxl_present_position += delta;
-		else if (current_motor_positions[i] < dxl_present_position) dxl_present_position -= delta;
+		if (current_motor_positions[i] > dxl_present_position) 
+		{
+			dxl_present_position += delta;
+			if (dxl_present_position > current_motor_positions[i]) dxl_present_position = current_motor_positions[i];
+		}
+		else if (current_motor_positions[i] < dxl_present_position) 
+		{
+			dxl_present_position -= delta;
+			if (dxl_present_position < current_motor_positions[i]) dxl_present_position = current_motor_positions[i];
+		}
 		
-		printf("%d %d -> %d\r", i, dxl_present_position, DXL_INIT_VALUE[i]);
+		printf("%d %d -> %d [d=%d]\r", i, dxl_present_position, current_motor_positions[i], delta);
 		
 	    write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID[i], ADDR_MX_GOAL_POSITION, dxl_present_position);
 		if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
@@ -189,7 +197,17 @@ void slowly_approach_current_position()
 		
 		usleep(5000);
 	} while (abs(dxl_present_position - current_motor_positions[i]) > motor_init_accuracy * 2);	
-	printf("reached current position.\n");
+	write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID[i], ADDR_MX_GOAL_POSITION, current_motor_positions[i]);
+	if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+	{
+	  printf("%s\n", getTxRxResult(PROTOCOL_VERSION, dxl_comm_result));
+	}
+	else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
+	{
+	  printf("%s\n", getRxPacketError(PROTOCOL_VERSION, dxl_error));
+	}
+	usleep(5000);
+	printf("\nreached current position %d.\n", dxl_present_position);
   }
 }
 

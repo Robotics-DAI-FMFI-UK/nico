@@ -85,7 +85,8 @@ except:
 right_hand_motor_indexes = [0, 16, 12, 14, 18, 10, 8, 3]
 all_motors_initial_positions = [ 0, 0, 0, 0, 0, 0, 0, 0, 577, 1188, 4068, 10, 2007, 1972, 2076, 1917, 1957, 2038, 946, 2947, 2377, 1982 ];
     
-my_chain = ikpy.chain.Chain.from_urdf_file("../kinematics.urdf", base_elements=["torso:11"], active_links_mask=[False, True, True, True, True, True, True, True, True, True])
+base_el = ["torso:11", "r_shoulder_z", "right_shoulder:11", "r_shoulder_y", "right_collarbone:11", "r_arm_x", "right_upper_arm:11", "r_elbow_y", "right_lower_arm:11", "r_wrist_z", "right_wrist:11", "r_wrist_x", "right_palm:11", "r_indexfingers_x", "finger_segment:23", "r_indexfinger_1st_x", "finger_segment:13", "r_indexfinger_2nd_x", "fingertip:13" ]
+my_chain = ikpy.chain.Chain.from_urdf_file("../kinematics.urdf", base_elements=base_el, active_links_mask=[False, True, True, True, True, True, True, True, True, True])
 print("chain:")
 print(my_chain)
 fig = matplotlib.pyplot.figure()
