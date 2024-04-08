@@ -1,0 +1,7 @@
+This project has been cloned from realsense example rs-align.
+
+Move it under librealsene/examples
+Create folder build, from there run "cmake .."
+It is still in progress, needs more debugging/testing.
+
+Arduino contains a self-contained demo only for the eyes.
